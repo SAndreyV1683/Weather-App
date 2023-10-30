@@ -14,7 +14,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
+import androidx.compose.material.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +32,7 @@ import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
@@ -128,15 +129,19 @@ fun TabLayout() {
             selectedTabIndex = tabIndex,
             indicator = { pos ->
                TabRowDefaults.Indicator(
-                   //Modifier.pagerTabIndicatorOffset(pagerState, pos)
+                   Modifier.pagerTabIndicatorOffset(pagerState, pos)
                )
             },
-            containerColor = BlueLight
+            backgroundColor = BlueLight
         ) {
             tabList.forEachIndexed { index, text ->
                 Tab(
                     selected = false,
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
                     text = {
                         Text(text = text)
                     }
